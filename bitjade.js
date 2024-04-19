@@ -68,8 +68,8 @@ function loadNavigation() {
             var poolList = "<ul class='navbar-nav '>";
             $.each(data.pools, function(index, value) {
                 poolList += "<li class='nav-item'>";
-                poolList += "  <a href='#" + value.id.toLowerCase() + "' class='nav-link coin-header" + (currentPool == value.id.toLowerCase() ? " coin-header-active" : "") + "'>";
-                poolList += "  <img class='.Image' src='https://www.bitjade.net/img/coin/icon/" + value.coin.type.toLowerCase() + ".png' /> " + value.coin.type;
+                poolList += "  <a href='#" + value.id.toLowerCase() + "' class='token-link coin-header" + (currentPool == value.id.toLowerCase() ? " coin-header-active" : "") + "'>";
+                poolList += "  <img src='https://www.bitjade.net/img/coin/icon/" + value.coin.type.toLowerCase() + ".png' /> " + value.coin.type;
                 poolList += "  </a>";
                 poolList += "</li>";
                 if (currentPool === value.id) {
