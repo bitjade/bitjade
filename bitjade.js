@@ -68,7 +68,7 @@ function loadNavigation() {
             $.each(data.pools, function(index, value) {
                 poolList += "<li class='coin-wrapper'>";
                 poolList += "  <a href='#" + value.id.toLowerCase() + "' class='token-link coin-header" + (currentPool == value.id.toLowerCase() ? " coin-header-active" : "") + "'>";
-                poolList += "  <img  src='img/coin/icon/" + value.coin.type.toLowerCase() + ".png' /> " + value.coin.type;
+                poolList += "  <img class='Image' src='img/coin/icon/" + value.coin.type.toLowerCase() + ".png' /> " + value.coin.type;
                 poolList += "  </a>";
                 poolList += "</li>";
                 if (currentPool === value.id) {
