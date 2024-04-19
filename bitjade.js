@@ -109,7 +109,7 @@ function generateCoinData(poolData) {
     return types.map(type => ({
         type: type,
         imageUrl: `https://www.bitjade.net/img/coin/icon/${type.toLowerCase()}.png`, // Assuming image URL format
-        algorithm: '' // Placeholder for algorithm, as it's not provided in the poolData
+        algorithm: algorithm, 
     }));
 }
 
