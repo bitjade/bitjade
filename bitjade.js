@@ -102,6 +102,14 @@ function fetchPoolData() {
 }
 
 // ********* SIDEBAR ***********
+// Add an event listener for the DOMContentLoaded event
+document.addEventListener('DOMContentLoaded', function() {
+    // Get a reference to the .coin-pool-wrapper div
+    const coinPoolWrapper = document.querySelector('.coin-pool-wrapper');
+
+    // Clear any existing content in the .coin-pool-wrapper div
+    coinPoolWrapper.innerHTML = '';
+});
 
 // Function to generate coinData based on pool types
 function generateCoinData(poolData) {
