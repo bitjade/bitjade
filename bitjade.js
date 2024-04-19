@@ -64,36 +64,27 @@ function loadNavigation() {
         .done(function(data) {
             var coinLogo = "";
             var coinName = "";
-            var poolList = "<ul class='coin-pool-wrapper'>";
+            var poolList = "<ul class='navbar-nav '>";
             $.each(data.pools, function(index, value) {
-                poolList += "<li class='coin-wrapper'>";
-                poolList += "  <a href='#" + value.id.toLowerCase() + "' class='token-link coin-header" + (currentPool == value.id.toLowerCase() ? " coin-header-active" : "") + "'>";
-                poolList += "  <img class='Image' src='img/coin/icon/" + value.coin.type.toLowerCase() + ".png' /> " + value.coin.type;
+                poolList += "<li class='nav-item'>";
+                poolList += "  <a href='#" + value.id.toLowerCase() + "' class='nav-link coin-header" + (currentPool == value.id.toLowerCase() ? " coin-header-active" : "") + "'>";
+                poolList += "  <img  src='https://www.bitjade.net/img/coin/icon/" + value.coin.type.toLowerCase() + ".png' /> " + value.coin.type;
                 poolList += "  </a>";
                 poolList += "</li>";
                 if (currentPool === value.id) {
-                    coinLogo = "<img style='width:40px' src='img/coin/icon/" + value.coin.type.toLowerCase() + ".png' />";
-                    coinName = value.coin.name || value.coin.type;
+                    coinLogo = "<img style='width:40px' src='https://www.bitjade.net/img/coin/icon/" + value.coin.type.toLowerCase() + ".png' />";
+                    coinName = value.coin.name || value.coin.type; // Use value.coin.name if available, otherwise fallback to value.coin.type
                 }
             });
             poolList += "</ul>";
 
             if (poolList.length > 0) {
-                $(".shell13-sidepanel_component").html(poolList);
+                $(".coin-list-header").html(poolList);
             }
 
-            const sidebarTemplate = $(".coin-wrapper").html();
-            const sidebarList = sidebarTemplate
-                .replace(/{{ coinId }}/g, currentPool)
-                .replace(/{{ coinLogo }}/g, coinLogo)
-                .replace(/{{ coinName }}/g, coinName);
-            $(".coin-pool-wrapper").html(sidebarList);
-
-            $("a.link").each(function() {
-                if (localStorage[currentPool + "-walletAddress"] && this.href.indexOf("/dashboard") > 0) {
-                    this.href = "#" + currentPool + "/dashboard?address=" + localStorage[currentPool + "-walletAddress"];
-                }
-            });
+            // Update coin logo and name in the sidebar
+            $(".token-image img").attr("src", coinLogo); // Update coin logo
+            $("[data-fetch='type']").text(coinName); // Update coin name
         })
         .fail(function() {
             $.notify(
@@ -110,7 +101,6 @@ function loadNavigation() {
 
 // Call the function to load the MiningCore sidebar navigation
 loadNavigation();
-
 
 
 // Function to fetch block data from the API
