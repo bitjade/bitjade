@@ -108,8 +108,8 @@ function generateCoinData(poolData) {
     const types = [...new Set(poolData.map(pool => pool.coin.type))]; // Extract unique coin types
     return types.map(type => ({
         imageUrl: `https://www.bitjade.net/img/coin/icon/${type.toLowerCase()}.png`, // Assuming image URL format
-        type: `Item 1 for ${type}`, // Customize item text based on type
-        algorithm: `Item 2 for ${algorithm}` // Customize item text based on type
+        type: `${type}`, // Customize item text based on type
+        algorithm: `${algorithm}` // Customize item text based on type
     }));
 }
 
@@ -119,9 +119,110 @@ fetchPoolData()
         const coinData = generateCoinData(poolData);
         // Now you can use coinData to generate HTML
         coinData.forEach(coin => {
-            // Generate HTML for each coin
-            // Follow the same HTML generation process as before
-            // Append the generated HTML to the .coin-pool-wrapper div
+            // Define the coinData array containing information about each coin
+const coinData = [
+    {
+        imageUrl: imageUrl[0],
+        symbolText: '',
+        algoText: ''
+    },
+    {
+        imageUrl: image[1],
+        symbolText: '',
+        algoText: ''
+    },
+    // Add more coin objects as needed
+];
+
+// Get a reference to the .coin-pool-wrapper div
+const coinPoolWrapper = document.querySelector('.coin-pool-wrapper');
+
+// Clear any existing content in the .coin-pool-wrapper div
+coinPoolWrapper.innerHTML = '';
+
+// Loop through the coinData array and generate HTML for each coin
+coinData.forEach(coin => {
+    // Create the necessary HTML elements for each coin
+    const coinWrapper = document.createElement('div');
+    coinWrapper.classList.add('coin-wrapper');
+
+    const tokenLink = document.createElement('a');
+    tokenLink.classList.add('token-link');
+
+    const coinGrid = document.createElement('div');
+    coinGrid.classList.add('coin-grid');
+
+    const tokenImageWrap = document.createElement('div');
+    tokenImageWrap.classList.add('token-image-wrap');
+
+    const tokenImage = document.createElement('img');
+    tokenImage.classList.add('token-image');
+    tokenImage.src = coin.imageUrl; // Assuming coin object has an `imageUrl` property
+
+    const tokenItem1 = document.createElement('div');
+    tokenItem1.classList.add('token-item');
+    tokenItem1.textContent = coin.symbolText; // Assuming coin object has an `item1Text` property
+
+    const tokenItem2 = document.createElement('div');
+    tokenItem2.classList.add('token-item');
+    tokenItem2.textContent = coin.algoText; // Assuming coin object has an `item2Text` property
+
+    // Append the elements to construct the desired structure
+    tokenImageWrap.appendChild(tokenImage);
+    coinGrid.appendChild(tokenImageWrap);
+    coinGrid.appendChild(tokenItem1);
+    coinGrid.appendChild(tokenItem2);
+    tokenLink.appendChild(coinGrid);
+    coinWrapper.appendChild(tokenLink);
+    coinPoolWrapper.appendChild(coinWrapper);
+});
+
+
+// Function to load the MiningCore sidebar navigation
+function loadNavigation() {
+    return $.ajax(API + "pools")
+        .done(function(data) {
+            var coinLogo = "";
+            var coinName = "";
+            var coinAlgo = "";
+            var poolList = "<ul class='navbar-nav '>";
+            $.each(data.pools, function(index, value) {
+                poolList += "<li class='nav-item'>";
+                poolList += "  <a href='#" + value.id.toLowerCase() + "' class='token-link coin-header" + (currentPool == value.id.toLowerCase() ? " coin-header-active" : "") + "'>";
+                poolList += "  <img src='https://www.bitjade.net/img/coin/icon/" + value.coin.type.toLowerCase() + ".png' /> " + value.coin.type;
+                poolList += "  </a>";
+                poolList += "</li>";
+                if (currentPool === value.id) {
+                    coinLogo = "<img style='width:40px' src='https://www.bitjade.net/img/coin/icon/" + value.coin.type.toLowerCase() + ".png' />";
+                    coinName = value.coin.name || value.coin.type; // Use value.coin.name if available, otherwise fallback to value.coin.type
+                }
+            });
+            poolList += "</ul>";
+
+            if (poolList.length > 0) {
+                $(".coin-pool-wrapper").html(poolList);
+            }
+
+            // Update coin logo and name in the sidebar
+            $(".token-image img").attr("src", coinLogo); // Update coin logo
+            $("[data-fetch='type']").text(coinName); // Update coin name
+            $("[data-fetch='algorithm']").text(coinAlgo); // Update coin name
+        })
+        .fail(function() {
+            $.notify(
+                {
+                    message: "Error: No response from API.<br>(loadNavigation)"
+                },
+                {
+                    type: "danger",
+                    timer: 3000
+                }
+            );
+        });
+}
+
+// Call the function to load the MiningCore sidebar navigation
+loadNavigation();
         });
     })
     .catch(error => {
