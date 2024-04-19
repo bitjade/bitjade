@@ -57,54 +57,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// ********* SIDEBAR ***********
-// Function to load the MiningCore sidebar navigation
-function loadNavigation() {
-    return $.ajax(API + "pools")
-        .done(function(data) {
-            var coinLogo = "";
-            var coinName = "";
-            var coinAlgo = "";
-            var poolList = "<ul class='navbar-nav '>";
-            $.each(data.pools, function(index, value) {
-                poolList += "<li class='nav-item'>";
-                poolList += "  <a href='#" + value.id.toLowerCase() + "' class='token-link coin-header" + (currentPool == value.id.toLowerCase() ? " coin-header-active" : "") + "'>";
-                poolList += "  <img src='https://www.bitjade.net/img/coin/icon/" + value.coin.type.toLowerCase() + ".png' /> " + value.coin.type;
-                poolList += "  </a>";
-                poolList += "</li>";
-                if (currentPool === value.id) {
-                    coinLogo = "<img style='width:40px' src='https://www.bitjade.net/img/coin/icon/" + value.coin.type.toLowerCase() + ".png' />";
-                    coinName = value.coin.name || value.coin.type; // Use value.coin.name if available, otherwise fallback to value.coin.type
-                }
-            });
-            poolList += "</ul>";
-
-            if (poolList.length > 0) {
-                $(".coin-pool-wrapper").html(poolList);
-            }
-
-            // Update coin logo and name in the sidebar
-            $(".token-image img").attr("src", coinLogo); // Update coin logo
-            $("[data-fetch='type']").text(coinName); // Update coin name
-            $("[data-fetch='algorithm']").text(coinAlgo); // Update coin name
-        })
-        .fail(function() {
-            $.notify(
-                {
-                    message: "Error: No response from API.<br>(loadNavigation)"
-                },
-                {
-                    type: "danger",
-                    timer: 3000
-                }
-            );
-        });
-}
-
-// Call the function to load the MiningCore sidebar navigation
-loadNavigation();
-
-
 // Function to fetch block data from the API
 function fetchBlockData() {
     return fetch('https://api.bitjade.net/api/pools/' + currentPool + '/blocks')
@@ -138,6 +90,44 @@ function fetchPerformanceData() {
         });
 }
 
+// Function to fetch pool data
+function fetchPoolData() {
+    return fetch(API + '/pools')
+        .then(response => response.json())
+        .then(data => data.pools)
+        .catch(error => {
+            console.error('Error fetching pool data:', error);
+            return [];
+        });
+}
+
+// ********* SIDEBAR ***********
+
+// Function to generate coinData based on pool types
+function generateCoinData(poolData) {
+    const types = [...new Set(poolData.map(pool => pool.coin.type))]; // Extract unique coin types
+    return types.map(type => ({
+        imageUrl: `https://www.bitjade.net/img/coin/icon/${type.toLowerCase()}.png`, // Assuming image URL format
+        symbolText: `Item 1 for ${type}`, // Customize item text based on type
+        algoTextText: `Item 2 for ${algorithm}` // Customize item text based on type
+    }));
+}
+
+// Fetch pool data and generate coinData
+fetchPoolData()
+    .then(poolData => {
+        const coinData = generateCoinData(poolData);
+        // Now you can use coinData to generate HTML
+        coinData.forEach(coin => {
+            // Generate HTML for each coin
+            // Follow the same HTML generation process as before
+            // Append the generated HTML to the .coin-pool-wrapper div
+        });
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+    
 // Function to fetch data from the API
 function fetchDataFromAPI(callback) {
     // Array to store promises for each fetch request
