@@ -113,13 +113,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Function to generate coinData based on pool types
 function generateCoinData(poolData) {
-    const types = [...new Set(poolData.map(pool => pool.coin.type))]; // Extract unique coin types
-    return types.map(type => ({
-        type: type,
-        imageUrl: `https://www.bitjade.net/img/coin/icon/${type.toLowerCase()}.png`, // Assuming image URL format
-        algorithm: algorithm, 
-    }));
+    const types = [...new Set(poolData.map(pool => pool.coin.type))];
+    return types.map(type => {
+        // Find the pool object with matching type
+        const pool = poolData.find(pool => pool.coin.type === type);
+        if (pool) {
+            // Extract type and algorithm from the pool object
+            const { type, algorithm } = pool.coin;
+            return {
+                type: `${type}`,
+                imageUrl: `https://www.bitjade.net/img/coin/icon/${type.toLowerCase()}.png`,
+                algorithm: `${algorithm}`
+            };
+        } else {
+            console.error('Pool not found for type:', type);
+            return null; // Handle the case where pool is not found
+        }
+    }).filter(coin => coin !== null); // Filter out null values
 }
+
 
 // Fetch pool data and generate coinData
 fetchPoolData()
