@@ -1,4 +1,4 @@
-let API = "https://api.bitjade.net/api"
+const API = "https://api.bitjade.net/api"
 
 // Function to update currentPool based on token selection
 function updateCurrentPool(token) {
@@ -12,7 +12,7 @@ function updateCurrentPool(token) {
 // Function to fetch data for the selected pool via AJAX
 function fetchDataForPool(pool) {
     // Make an AJAX request to fetch data for the selected pool
-    fetch('https://api.bitjade.net/api/pools')
+    fetch(API + '/pools')
         .then(response => response.json())
         .then(data => {
             // Find the pool with matching ID
@@ -64,6 +64,7 @@ function loadNavigation() {
         .done(function(data) {
             var coinLogo = "";
             var coinName = "";
+            var coinAlgo = "";
             var poolList = "<ul class='navbar-nav '>";
             $.each(data.pools, function(index, value) {
                 poolList += "<li class='nav-item'>";
@@ -85,6 +86,7 @@ function loadNavigation() {
             // Update coin logo and name in the sidebar
             $(".token-image img").attr("src", coinLogo); // Update coin logo
             $("[data-fetch='type']").text(coinName); // Update coin name
+            $("[data-fetch='algorithm']").text(coinAlgo); // Update coin name
         })
         .fail(function() {
             $.notify(
