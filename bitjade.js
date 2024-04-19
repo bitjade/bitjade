@@ -1,3 +1,63 @@
+const API = "https://api.bitjade.net/api"
+
+// Function to update currentPool based on token selection
+function updateCurrentPool(token) {
+    // Update currentPool based on the token
+    currentPool = token.toLowerCase(); // Assuming the token is in lowercase format
+    
+    // Fetch data for the selected pool via AJAX
+    fetchDataForPool(currentPool);
+}
+
+// Function to fetch data for the selected pool via AJAX
+function fetchDataForPool(pool) {
+    // Make an AJAX request to fetch data for the selected pool
+    fetch('https://api.bitjade.net/api/pools')
+        .then(response => response.json())
+        .then(data => {
+            // Find the pool with matching ID
+            const selectedPool = data.pools.find(p => p.id === pool);
+            
+            if (selectedPool) {
+                // Once data is fetched, update the content on the right side of the page
+                updateContent(selectedPool);
+            } else {
+                console.error('Pool not found:', pool);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching data for pool:', error);
+        });
+}
+
+// Function to update the content on the right side of the page
+function updateContent(poolData) {
+    // Example: Assuming you have elements with IDs to update the content
+    document.getElementById('poolName').textContent = poolData.coin.name;
+    document.getElementById('poolStats').textContent = `Connected Miners: ${poolData.poolStats.connectedMiners}, Pool Hashrate: ${poolData.poolStats.poolHashrate}`;
+    // Update other elements as needed with data fetched for the selected pool
+}
+
+// Add event listeners to token links in the sidebar
+document.addEventListener('DOMContentLoaded', function() {
+    // Assuming each token link in the sidebar has a class named 'token-link'
+    var tokenLinks = document.querySelectorAll('.token-link');
+    
+    // Loop through each token link and attach click event listener
+    tokenLinks.forEach(function(link) {
+        link.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent default link behavior
+            
+            // Get the token from the link's href attribute
+            var token = link.getAttribute('href').replace('#', ''); // Assuming the href attribute contains the token preceded by '#'
+            
+            // Update currentPool based on the selected token
+            updateCurrentPool(token);
+        });
+    });
+});
+
+
 // Function to fetch block data from the API
 function fetchBlockData() {
     return fetch('https://api.bitjade.net/api/pools/pgn1/blocks')
@@ -9,16 +69,39 @@ function fetchBlockData() {
         });
 }
 
+// Function to fetch block data from the API
+function fetchMinerData() {
+    return fetch('https://api.bitjade.net/api/pools/pgn1/miners')
+        .then(response => response.json())
+        .then(data => data)
+        .catch(error => {
+            console.error('Error fetching Miner data:', error);
+            return [];
+        });
+}
+
+// Function to fetch block data from the API
+function fetchPerformanceData() {
+    return fetch('https://api.bitjade.net/api/pools/pgn1/performance')
+        .then(response => response.json())
+        .then(data => data)
+        .catch(error => {
+            console.error('Error fetching Performance data:', error);
+            return [];
+        });
+}
+
 // Function to fetch data from the API
 function fetchDataFromAPI(callback) {
     // Array to store promises for each fetch request
     const endpoints = [
         '/pools',
         '/pools/pgn1/blocks',
-        '/pools/pgn1/performance'
+        '/pools/pgn1/performance',
+        '/pools/pgn1/miners'
     ];
     const fetchPromises = endpoints.map(endpoint =>
-        fetch('https://api.bitjade.net/api' + endpoint)
+        fetch(API + endpoint)
             .then(response => response.json())
             .then(data => ({ endpoint, data })) // Pass endpoint along with data
     );
