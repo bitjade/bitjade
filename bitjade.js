@@ -57,6 +57,61 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+// ********* SIDEBAR ***********
+// Function to load the MiningCore sidebar navigation
+function loadNavigation() {
+    return $.ajax(API + "pools")
+        .done(function(data) {
+            var coinLogo = "";
+            var coinName = "";
+            var poolList = "<ul class='coin-pool-wrapper'>";
+            $.each(data.pools, function(index, value) {
+                poolList += "<li class='coin-wrapper'>";
+                poolList += "  <a href='#" + value.id.toLowerCase() + "' class='token-link coin-header" + (currentPool == value.id.toLowerCase() ? " coin-header-active" : "") + "'>";
+                poolList += "  <img  src='img/coin/icon/" + value.coin.type.toLowerCase() + ".png' /> " + value.coin.type;
+                poolList += "  </a>";
+                poolList += "</li>";
+                if (currentPool === value.id) {
+                    coinLogo = "<img style='width:40px' src='img/coin/icon/" + value.coin.type.toLowerCase() + ".png' />";
+                    coinName = value.coin.name || value.coin.type;
+                }
+            });
+            poolList += "</ul>";
+
+            if (poolList.length > 0) {
+                $(".shell13-sidepanel_component").html(poolList);
+            }
+
+            const sidebarTemplate = $(".coin-wrapper").html();
+            const sidebarList = sidebarTemplate
+                .replace(/{{ coinId }}/g, currentPool)
+                .replace(/{{ coinLogo }}/g, coinLogo)
+                .replace(/{{ coinName }}/g, coinName);
+            $(".coin-pool-wrapper").html(sidebarList);
+
+            $("a.link").each(function() {
+                if (localStorage[currentPool + "-walletAddress"] && this.href.indexOf("/dashboard") > 0) {
+                    this.href = "#" + currentPool + "/dashboard?address=" + localStorage[currentPool + "-walletAddress"];
+                }
+            });
+        })
+        .fail(function() {
+            $.notify(
+                {
+                    message: "Error: No response from API.<br>(loadNavigation)"
+                },
+                {
+                    type: "danger",
+                    timer: 3000
+                }
+            );
+        });
+}
+
+// Call the function to load the MiningCore sidebar navigation
+loadNavigation();
+
+
 
 // Function to fetch block data from the API
 function fetchBlockData() {
