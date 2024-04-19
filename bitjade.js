@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Function to fetch block data from the API
 function fetchBlockData() {
-    return fetch('https://api.bitjade.net/api/pools/pgn1/blocks')
+    return fetch('https://api.bitjade.net/api/pools/' + currentPool + '/blocks')
         .then(response => response.json())
         .then(data => data)
         .catch(error => {
@@ -71,7 +71,7 @@ function fetchBlockData() {
 
 // Function to fetch block data from the API
 function fetchMinerData() {
-    return fetch('https://api.bitjade.net/api/pools/pgn1/miners')
+    return fetch('https://api.bitjade.net/api/pools/' + currentPool + '/miners')
         .then(response => response.json())
         .then(data => data)
         .catch(error => {
@@ -82,7 +82,7 @@ function fetchMinerData() {
 
 // Function to fetch block data from the API
 function fetchPerformanceData() {
-    return fetch('https://api.bitjade.net/api/pools/pgn1/performance')
+    return fetch('https://api.bitjade.net/api/pools/' + currentPool +'/performance')
         .then(response => response.json())
         .then(data => data)
         .catch(error => {
@@ -96,9 +96,9 @@ function fetchDataFromAPI(callback) {
     // Array to store promises for each fetch request
     const endpoints = [
         '/pools',
-        '/pools/pgn1/blocks',
-        '/pools/pgn1/performance',
-        '/pools/pgn1/miners'
+        '/pools/' + currentPool + '/blocks',
+        '/pools/' + currentPool + '/performance',
+        '/pools/' + currentPool + '/miners'
     ];
     const fetchPromises = endpoints.map(endpoint =>
         fetch(API + endpoint)
