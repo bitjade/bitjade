@@ -255,3 +255,6 @@ function loadStatsChart() {
 
 // Call the loadStatsChart function to load the chart
 loadStatsChart();
+
+
+// TEST 
