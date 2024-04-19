@@ -108,8 +108,8 @@ function generateCoinData(poolData) {
     const types = [...new Set(poolData.map(pool => pool.coin.type))]; // Extract unique coin types
     return types.map(type => ({
         imageUrl: `https://www.bitjade.net/img/coin/icon/${type.toLowerCase()}.png`, // Assuming image URL format
-        symbolText: `Item 1 for ${type}`, // Customize item text based on type
-        algoTextText: `Item 2 for ${algorithm}` // Customize item text based on type
+        type: `Item 1 for ${type}`, // Customize item text based on type
+        algorithm: `Item 2 for ${algorithm}` // Customize item text based on type
     }));
 }
 
