@@ -79,7 +79,7 @@ function loadNavigation() {
             poolList += "</ul>";
 
             if (poolList.length > 0) {
-                $(".coin-list-header").html(poolList);
+                $(".coin-pool-wrapper").html(poolList);
             }
 
             // Update coin logo and name in the sidebar
