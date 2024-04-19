@@ -1,4 +1,4 @@
-const API = "https://api.bitjade.net/api"
+let API = "https://api.bitjade.net/api"
 
 // Function to update currentPool based on token selection
 function updateCurrentPool(token) {
